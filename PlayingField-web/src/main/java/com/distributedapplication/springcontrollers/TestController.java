@@ -6,18 +6,29 @@
 
 package com.distributedapplication.springcontrollers;
 
-import com.distributedapplication.TestEJBFacadeLocal;
+//import com.distributedapplication.TestSingletonFacadeLocal;
+//import com.distributedapplication.TestStatefulFacadeLocal;
+//import com.distributedapplication.TestStatelessFacadeLocal;
+//import java.text.DateFormat;
+//import java.util.Date;
+//import java.util.Locale;
 import com.distributedapplication.TestSingletonFacadeLocal;
 import com.distributedapplication.TestStatefulFacadeLocal;
+import com.distributedapplication.TestStatelessFacadeLocal;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
+import org.springframework.web.bind.annotation.ResponseBody;
 /**
  *
  * @author Aklil
@@ -29,9 +40,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * 'handlermappingrequest' bound the 'servelet context' and the 'webapplication context'
  */
 @Controller
-//@Lazy(true)
 
-//@RequestMapping("/home")
 public class TestController {
     
 //    @EJB(lookup="java:global/PlayingField/TestSLSB !com.distributedapplication.springcontrollers.TestSLSBLocal")
@@ -41,21 +50,27 @@ public class TestController {
 //    private TestFacadeLocal testFacadeLocal;
     /**
      * Simply select the home view to be rendered by returning its name
+     * @param response
+     * @return 
+     * @throws org.json.JSONException
      *  @RequestMapping annotation specifies that the home() method will handle a GET request with the URL / (default page of the application)
      */
     
-//    @EJB(lookup="java:global/TestEJBFacade!com.distributedapplication.TestEJBFacadeLocal")
-//    private TestEJBFacadeLocal testEJBFacadeLocal;
+//    @EJB(lookup="java:global/TestEJBFacade!com.distributedapplication.TestStatelessFacadeLocal")
+//    private TestStatelessFacadeLocal testEJBFacadeLocal;
     @Autowired 
-    private TestEJBFacadeLocal testEJBFacadeLocal;
+    private TestStatelessFacadeLocal testStatelessFacadeLocal;
    
-    
+   
     @Autowired
     private TestStatefulFacadeLocal testStatefulFacadeLocal;
     
     @Autowired
     private TestSingletonFacadeLocal testSingletonFacadeLocal;
-    
+//    
+////    @Autowired  
+////    private TestTimerServiceFacadeLocal testTimerServiceFacadeLocal;
+//            
     @RequestMapping(value="/home", method = RequestMethod.GET) 
     public String homeTest(Locale locale, Model model){
         Date date = new Date();  
@@ -72,8 +87,9 @@ public class TestController {
     }
      @RequestMapping(value="/customer", method = RequestMethod.GET)
      public String ejbTest(Model model){
+        
          
-         model.addAttribute("CustomerName",testEJBFacadeLocal.getCustomerName());
+         model.addAttribute("CustomerName",testStatelessFacadeLocal.getCustomerName(20000));
          return "customer";
      }
      
@@ -88,5 +104,27 @@ public class TestController {
          
          model.addAttribute("CustomerName",testSingletonFacadeLocal.getCustomerName());
          return "singleton";
+     }
+     
+     @RequestMapping(value="/index.html", method = RequestMethod.GET)
+     public String testRest(){
+         return "index.html";
+     }
+     
+     @RequestMapping(value="/message.json",method=RequestMethod.GET)
+     @ResponseBody 
+     public  TestSingletonFacadeLocal messageTest(final HttpServletResponse response) throws JSONException{
+
+        JSONObject jsonRequestData = new JSONObject();	
+        jsonRequestData.put("message", "Aklil");
+        
+       
+//        Map<String, String> map = new HashMap<>();
+//        
+//        map.put("name",testSingletonFacadeLocal.getCustomerName());
+        testSingletonFacadeLocal.setCustomerName("Aklil");
+        
+        return testSingletonFacadeLocal ;
+//         return testSingletonFacadeLocal.getCustomerName();
      }
 }
