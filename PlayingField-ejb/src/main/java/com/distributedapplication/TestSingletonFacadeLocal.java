@@ -16,5 +16,7 @@ import javax.ejb.Local;
 public interface TestSingletonFacadeLocal {
 
     String getCustomerName();
+
+    void setCustomerName(String String);
     
 }

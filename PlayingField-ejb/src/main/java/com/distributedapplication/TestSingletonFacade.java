@@ -14,12 +14,18 @@ import javax.ejb.Singleton;
  */
 @Singleton
 public class TestSingletonFacade implements TestSingletonFacadeLocal {
-
+    
+    String name;
     @Override
     public String getCustomerName() {
-        return "Singleton Aklil";
+        return this.name;
     }
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
+
+    @Override
+    public void setCustomerName(String name) {
+        this.name = name;
+    }
 }

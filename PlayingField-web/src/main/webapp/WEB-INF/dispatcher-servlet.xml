@@ -22,12 +22,48 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd"
        default-lazy-init="true">       
     <!--dont forgetto check the xmlns entities-->
-    <bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>
+    <!--<bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"/>-->
     
     <!--search in this context annotation based-->
     <mvc:annotation-driven />
-    <!--where components are stored and register them in spring container-->
+    <!--<mvc:annotation-driven ignoreDefaultModelOnRedirect=/>-->
+<!--        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.ResourceHttpMessageConverter"/>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+        </mvc:message-converters>-->
+<!--    </mvc:annotation-driven>-->
+    
+    <!-- Configure to plugin JSON as request and response in method handler -->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="jsonMessageConverter"/>
+            </list>
+        </property>
+    </bean>
+     
+    <!-- Configure bean to convert JSON to POJO and vice versa -->
+    <bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+    </bean> 
+    
+        <!--where components are stored and register them in spring container-->
+    <context:annotation-config />
     <context:component-scan base-package="com.distributedapplication.springcontrollers" />
+    
+    <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <!-- Turn off working out content type based on URL file extension, should fall back to looking at the Accept headers -->
+        <property name="favorPathExtension" value="false" />
+    </bean>
+    
+<!--     Configure bean to convert JSON to POJO and vice versa 
+    <bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+    </bean>   -->
+    
+    <!--added to make no catching-->
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="cacheSeconds" value="0" />
+    </bean>
+
    
 
     <!--
@@ -59,16 +95,29 @@
                     cache-home="false" lookup-home-on-startup="false"
                     resource-ref="false"
                     lazy-init="true"    />-->
-    <jee:local-slsb id="testEJBFacadeLocal" jndi-name="java:module/TestEJBFacade"
-                business-interface="com.distributedapplication.TestEJBFacadeLocal"
-                cache-home="false" lookup-home-on-startup="false"
-                resource-ref="false"
-                lazy-init="true" />
+    <jee:local-slsb id="testStatelessFacadeLocal" jndi-name="java:module/TestStatelessFacade"
+            business-interface="com.distributedapplication.TestStatelessFacadeLocal"
+            cache-home="false" lookup-home-on-startup="false"
+            resource-ref="false"
+            lazy-init="true" />
     
     <jee:jndi-lookup id="testStatefulFacadeLocal" jndi-name="java:module/TestStatefulFacade!com.distributedapplication.TestStatefulFacadeLocal"
             resource-ref="false"
             lazy-init="true"  />
+    
     <jee:jndi-lookup id="testSingletonFacadeLocal" jndi-name="java:module/TestSingletonFacade!com.distributedapplication.TestSingletonFacadeLocal"
             resource-ref="false"
             lazy-init="true"  />
+    
+<!--    <jee:local-slsb id="testTimerServiceFacadeLocal" jndi-name="java:module/TestTimerServiceFacade!com.distributedapplication.TestTimerServiceFacadeLocal"
+            business-interface="com.distributedapplication.TestTimerServiceFacadeLocal"
+            cache-home="false" lookup-home-on-startup="false"
+            resource-ref="false"
+            lazy-init="true" />-->
+            
+       <!--serving static resources like html. index.html will be invoked here-->
+    <mvc:resources mapping="/static**" location="/static/"  cache-period="0"/> 
+    
+
+<!--    <mvc:resources mapping="/static**" location="/static/"  cache-period="0"/> -->
 </beans>  
