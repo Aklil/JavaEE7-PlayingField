@@ -13,6 +13,6 @@
     </head>
     <body>
         <h1>Hello Customer</h1>
-        <h2>Your Name is ${CustomerName}</h2>
+        <h2>Your Number of session ${SessionCounter}</h2>
     </body>
 </html>

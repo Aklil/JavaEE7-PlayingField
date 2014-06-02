@@ -18,7 +18,7 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
-       	http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
+       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd"
        default-lazy-init="true">       
     <!--dont forgetto check the xmlns entities-->
@@ -26,12 +26,6 @@
     
     <!--search in this context annotation based-->
     <mvc:annotation-driven />
-    <!--<mvc:annotation-driven ignoreDefaultModelOnRedirect=/>-->
-<!--        <mvc:message-converters>
-            <bean class="org.springframework.http.converter.ResourceHttpMessageConverter"/>
-            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
-        </mvc:message-converters>-->
-<!--    </mvc:annotation-driven>-->
     
     <!-- Configure to plugin JSON as request and response in method handler -->
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
@@ -90,12 +84,10 @@
     <bean name="indexController"
           class="org.springframework.web.servlet.mvc.ParameterizableViewController"
           p:viewName="index" />
-<!--    <jee:local-slsb id="testSLSB" jndi-name="java:app/PlayingField/TestSLSB"
-                    business-interface="com.distributedapplication.springcontrollers.TestSLSBLocal"
-                    cache-home="false" lookup-home-on-startup="false"
-                    resource-ref="false"
-                    lazy-init="true"    />-->
-    <jee:local-slsb id="testStatelessFacadeLocal" jndi-name="java:module/TestStatelessFacade"
+
+
+    
+<!--    <jee:local-slsb id="testStatelessFacadeLocal" jndi-name="java:module/TestStatelessFacade"
             business-interface="com.distributedapplication.TestStatelessFacadeLocal"
             cache-home="false" lookup-home-on-startup="false"
             resource-ref="false"
@@ -103,11 +95,11 @@
     
     <jee:jndi-lookup id="testStatefulFacadeLocal" jndi-name="java:module/TestStatefulFacade!com.distributedapplication.TestStatefulFacadeLocal"
             resource-ref="false"
-            lazy-init="true"  />
+            lazy-init="true"  />-->
     
-    <jee:jndi-lookup id="testSingletonFacadeLocal" jndi-name="java:module/TestSingletonFacade!com.distributedapplication.TestSingletonFacadeLocal"
+<!--    <jee:jndi-lookup id="testSingletonFacadeLocal" jndi-name="java:module/TestSingletonFacade!com.distributedapplication.TestSingletonFacadeLocal"
             resource-ref="false"
-            lazy-init="true"  />
+            lazy-init="true"  />-->
     
 <!--    <jee:local-slsb id="testTimerServiceFacadeLocal" jndi-name="java:module/TestTimerServiceFacade!com.distributedapplication.TestTimerServiceFacadeLocal"
             business-interface="com.distributedapplication.TestTimerServiceFacadeLocal"
@@ -116,8 +108,8 @@
             lazy-init="true" />-->
             
        <!--serving static resources like html. index.html will be invoked here-->
+       
     <mvc:resources mapping="/static**" location="/static/"  cache-period="0"/> 
     
-
 <!--    <mvc:resources mapping="/static**" location="/static/"  cache-period="0"/> -->
 </beans>  

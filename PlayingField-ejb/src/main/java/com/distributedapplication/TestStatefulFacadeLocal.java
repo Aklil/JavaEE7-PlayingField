@@ -16,5 +16,7 @@ import javax.ejb.Local;
 public interface TestStatefulFacadeLocal {
 
     String getCustomerName();
+
+    int checkSessionCounter();
     
 }

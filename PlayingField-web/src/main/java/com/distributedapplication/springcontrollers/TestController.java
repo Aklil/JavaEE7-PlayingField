@@ -15,15 +15,19 @@ package com.distributedapplication.springcontrollers;
 import com.distributedapplication.TestSingletonFacadeLocal;
 import com.distributedapplication.TestStatefulFacadeLocal;
 import com.distributedapplication.TestStatelessFacadeLocal;
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import javax.ejb.EJB;
+import javax.enterprise.context.SessionScoped;
 import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,8 +44,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * 'handlermappingrequest' bound the 'servelet context' and the 'webapplication context'
  */
 @Controller
+//@EJB(name ="statefulbean" , beanInterface=TestStatefulFacadeLocal.class,mappedName = "java:module/TestStatefulFacade!com.distributedapplication.TestStatefulFacadeLocal")
+ @Scope("request") //creates new controller for each request so session is not persisted
 
-public class TestController {
+public class TestController implements Serializable {
     
 //    @EJB(lookup="java:global/PlayingField/TestSLSB !com.distributedapplication.springcontrollers.TestSLSBLocal")
 //    @Autowired 
@@ -58,14 +64,17 @@ public class TestController {
     
 //    @EJB(lookup="java:global/TestEJBFacade!com.distributedapplication.TestStatelessFacadeLocal")
 //    private TestStatelessFacadeLocal testEJBFacadeLocal;
-    @Autowired 
+//    @Autowired 
+    @EJB(mappedName = "java:module/TestStatelessFacade!com.distributedapplication.TestStatelessFacadeLocal")
     private TestStatelessFacadeLocal testStatelessFacadeLocal;
    
    
-    @Autowired
+//    @Autowired
+    @EJB(mappedName = "java:module/TestStatefulFacade!com.distributedapplication.TestStatefulFacadeLocal")
     private TestStatefulFacadeLocal testStatefulFacadeLocal;
     
-    @Autowired
+//    @Autowired
+    @EJB(mappedName = "java:module/TestSingletonFacade!com.distributedapplication.TestSingletonFacadeLocal")
     private TestSingletonFacadeLocal testSingletonFacadeLocal;
 //    
 ////    @Autowired  
@@ -96,7 +105,7 @@ public class TestController {
     @RequestMapping(value="/stateful", method = RequestMethod.GET)
      public String statefulTest(Model model){
          
-         model.addAttribute("CustomerName",testStatefulFacadeLocal.getCustomerName());
+         model.addAttribute("SessionCounter",testStatefulFacadeLocal.checkSessionCounter());
          return "stateful";
      }
      @RequestMapping(value="/singleton", method = RequestMethod.GET)
@@ -111,7 +120,7 @@ public class TestController {
          return "index.html";
      }
      
-     @RequestMapping(value="/message.json",method=RequestMethod.GET)
+     @RequestMapping(value="/msg.json",method=RequestMethod.GET)
      @ResponseBody 
      public  TestSingletonFacadeLocal messageTest(final HttpServletResponse response) throws JSONException{
 
